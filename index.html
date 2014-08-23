@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+ <head>
+    <title>yodGist - Github gist embed (jQuery plugin)</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <script type="text/javascript" src="//code.jquery.com/jquery-latest.min.js"></script>
+    <script type="text/javascript" src="jquery.yodgist.js"></script>
+
+    <style>
+      h3 {font-weight: normal;}
+
+      .yodgist_wrap .gist-data {
+        font-size: 14px!important;
+      }
+/*
+      .gist .line-numbers *, .gist .line-data * {
+        font-weight: normal!important;
+        font-style: normal!important;
+      }
+*/
+      .scroll {max-height: 340px; overflow-y: scroll;}
+      .title {margin: 50px 0 10px;}
+      .subtitle {30px 0 10px;}
+      .raw {padding: 5px; background-color: #EAF3EB}
+      .raw.parsed {background-color: #EEE}
+      .code_ex {
+        padding: 10px!important;
+        display: inline-block!important;
+        margin: 10px 0 20px;/*
+        background-color: #EEE;
+        border: solid 1px #CCC;*/
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="wrap">
+      <h1><a href="http://blog.thrsh.net" target="_blank">yodGist</a> - Github gist embed (jQuery plugin) - DEMO</h1>
+
+      <h2 class="title">HTML</h2>
+
+      <h3 class="subtitle">Meta (footer) &amp; Line number : true &amp; Convert : true</h3>
+
+      <code class="code_ex html">&lt;div data-gist-id="3833406" data-gist-html="1" data-gist-class="scroll" data-gist-file="index.php" class="example_1"&gt;&lt;/div&gt;</code>
+
+      <div data-gist-id="3833406" data-gist-html="1" data-gist-class="scroll" data-gist-file="index.php" class="example_1"></div>
+
+      <h3>Meta (footer) &amp; Line number : false &amp; Convert : false</h3>
+
+      <code class="code_ex html">&lt;div data-gist-id="3833406" data-gist-class="scroll" data-gist-file="search.php" class="example_2"&gt;&lt;/div&gt;</code>
+
+      <div data-gist-id="3833406" data-gist-class="scroll" data-gist-file="search.php" class="example_2"></div>
+
+      <h2 class="title">RAW</h2>
+
+      <h3 class="subtitle">HTML : false, no ID (all gist: total 3), self <a href="http://highlightjs.org/" target="_blank">highlight.js</a> code, parsing results</h3>
+
+      <code class="code_ex html">&lt;div data-gist-id="3833406" data-gist-class="php scroll raw" class="example_3"&gt;&lt;/div&gt;</code>
+      
+      <div data-gist-id="3833406" data-gist-class="php scroll raw" class="example_3"></div>
+
+      <div class="parsing"></div>
+    </div>
+
+    <script>
+      function print_r(o){
+        return JSON.stringify(o,null,'\t').replace(/\n/g,'<br>').replace(/\t/g,'&nbsp;&nbsp;');
+      }
+
+      function render_hljs() {
+        var pre = $("pre.raw.php:not(:first)");
+        if (!pre.length) return;
+
+        $("<link>", {href: "//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.0/styles/paraiso.light.min.css", rel: "stylesheet"}).appendTo('head');
+        $.getScript("//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.0/highlight.min.js", function() {
+          if (hljs) {
+            pre.each(function() {
+              if (hljs) hljs.highlightBlock($(this).get(0));
+            });
+            $("code[class*=code_ex]").each(function() {
+              if (hljs) hljs.highlightBlock($(this).get(0));
+            });
+          }
+        });
+      }
+
+      $(document).ready(function() {
+        $('.example_1').yodGist({
+          //html : true,
+          replacelinebreak: true,
+          converttable: true
+        });
+
+        $('.example_2').yodGist({
+          linenumber : false,
+          html : true,
+          meta: false
+        });
+
+        $('.example_3').yodGist({
+          html : false,
+          complete: function() {
+            console.log(this.res);
+            if (this.res && this.res.hasOwnProperty('owner')) {
+              render_hljs();
+
+              $(".parsing")
+                .append(
+                  $("<h3/>", {"class": "subtitle", html: "Parsed results (ex: Owner)"})
+                )
+                .append(
+                  $("<pre/>", {"class": "scroll raw parsed"}).append($("<code/>", {html: print_r(this.res.owner)}))
+                );
+            }
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
