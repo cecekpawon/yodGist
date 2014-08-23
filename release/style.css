@@ -1,0 +1,19 @@
+/*
+  Fix broken table
+  Not working with : viewport meta in head tag 
+*/
+
+.gist .line-numbers *, .gist .line-data * { 
+  font-size: 12px!important;
+  font-weight: normal!important; 
+  font-style: normal!important;
+}
+
+/*
+  Fixed font ul table replacement
+  Working OOTB, tested: Chrome, FF, Safari (mobile)
+*/
+
+.yodgist_wrap .gist-data {
+  font-size: 14px!important;
+}
