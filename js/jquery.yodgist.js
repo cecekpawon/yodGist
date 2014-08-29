@@ -9,6 +9,7 @@
 | v 1.0 - 2/4/2014        |
 | v 1.1 - 2/6/2014        |
 | v 1.2 - 7/7/2014        |
+| v 1.3 - 8/29/2014       |
 +-------------------------+
 */
 
@@ -17,6 +18,7 @@
     this.options = $.extend({
       id:  0,
       class: "",
+      type: "",
       file: "",
       replace : true,
       html : false,
@@ -49,6 +51,7 @@
 
       _this.id = _this.options.id;
       _this.classname = _this.options.classname;
+      _this.type = _this.options.type;
       _this.file = _this.options.file;
 
       var file = "", url = _this.options.html ? _this.url.base + _this.id + ".json" : _this.url.api + _this.id;
@@ -212,7 +215,7 @@
           if (!this.file || (this.file === a)) {
             this.content.append(
               $("<pre/>", {"class": this.classname}).append(
-                $("<code/>", {html: this.escapeHtml(content)})
+                $("<code/>", {"class": this.type, html: this.escapeHtml(content)})
               )
             );
           }
@@ -263,10 +266,14 @@
 
   $.fn.yodGist = function(options) {
     return this.each(function() {
-      if (id = $(this).attr("data-gist-id").replace(/[^0-9]/, "")) {
+      if (id = $(this).attr("data-gist-id").replace(/[^a-z0-9]/i, "")) {
         classname = $(this).attr("data-gist-class") || "";
+        if (type = $(this).attr("data-gist-type") || "") {
+          type = " " + type.replace(/(language\-)/ig, "") + " ";
+          type = type.replace(/([^\s]+)/ig, "language-$1").trim();
+        }
         file = $(this).attr("data-gist-file") || "";
-        options = $.extend({}, {id: id, classname: classname, file: file}, options);
+        options = $.extend({}, {id: id, classname: classname, type: type, file: file}, options);
 
         var keys = ["replace", "html", "linenumber", "meta", "replacelinebreak", "converttable", "style", "debug"];
 
