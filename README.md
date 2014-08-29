@@ -67,7 +67,8 @@ $(document).ready(function() {
 | style             | `true`        | inject github CSS (html: `true`) |
 | debug             | `false`       | console log results / errors |
 | complete          | `null`        | callback function parsing done |
-| class             | `<empty-string>`        | class attribute to new created element |
+| type              | `<empty-string>`        | class attribute to new created `<code>` element |
+| class             | `<empty-string>`        | class attribute to new created `<pre>`element |
 | file              | `<empty-string>`        | line number (html: `true`) |
 
 
